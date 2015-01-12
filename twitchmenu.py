@@ -1,0 +1,100 @@
+#!/usr/bin/python
+
+#api
+import json
+import urllib
+
+#graphics
+import urwid
+
+#run stream
+import subprocess
+
+access_token = ""
+
+########################################################################
+
+SOFTWARE_NAME = "Twitch Menu"
+VERSION = "0.1"
+
+########################################################################
+
+def apiRequest(reqStr):
+	return json.loads(urllib.urlopen(reqStr).read())
+
+
+class TvApp():
+	def __init__(self):
+		self.palette = [
+			('text', 'black', 'light gray'),
+			('focused', 'light gray', 'black'),
+			('bg', 'black', 'light gray'),
+			('title', 'black', 'light blue')
+		]
+
+	def handleInput(self, key):
+		if key in ('q', 'Q'):
+			raise urwid.ExitMainLoop()
+		if key in ('r', 'R'):
+			self.updateList()
+
+	def streamSelected(self, button, channel):
+		subprocess.Popen(["livestreamer", "twitch.tv/"+channel, "best", "-Q"])
+
+	def getOnlineChannels(self):
+		response = apiRequest('https://api.twitch.tv/kraken/streams/followed?oauth_token='+access_token)
+		streams = response['streams']
+
+		newList = []
+		for stream in streams:
+			newList.append(stream['channel']['name'])
+
+		return newList
+
+	def updateList(self, loop=None, data=None):
+		newList = [self.mapTitle]
+
+		onlineChannels = self.getOnlineChannels()
+		for channel in onlineChannels:
+			button = urwid.Button(channel)
+			urwid.connect_signal(button, 'click', self.streamSelected, channel)
+			newList.append(urwid.AttrMap(button, 'text', 'focused'))
+
+		self.listWalker[:] = newList
+
+		self.loop.set_alarm_in(30, self.updateList)
+
+	def run(self):
+		self.title = urwid.Text(SOFTWARE_NAME + " " + VERSION, align='center')
+		self.mapTitle = urwid.AttrMap(self.title, 'title')
+
+		streamList = [self.mapTitle]
+
+		onlineChannels = self.getOnlineChannels()
+		for channel in onlineChannels:
+			button = urwid.Button(channel)
+			urwid.connect_signal(button, 'click', self.streamSelected, channel)
+			streamList.append(urwid.AttrMap(button, 'text', 'focused'))
+
+		self.listWalker = urwid.SimpleFocusListWalker(streamList)
+		self.listBox = urwid.ListBox(self.listWalker)
+
+		self.mapMainBox = urwid.AttrMap(self.listBox, 'bg')
+
+		self.loop = urwid.MainLoop(self.mapMainBox, self.palette, unhandled_input=self.handleInput)
+		self.loop.set_alarm_in(30, self.updateList)
+		self.loop.run()
+
+
+#grab access_token from file
+try:
+	access_token = open("access_token", "r").read().strip('\n ')
+	if access_token == '':
+		print "No access token found. See manual to grab your access token."
+		exit(0)
+except:
+	print "No access token found. See manual to grab your access token."
+
+
+tvapp = TvApp()
+tvapp.run()
