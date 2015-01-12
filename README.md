@@ -1,6 +1,8 @@
 Twitch Menu
 ===========
 
+Twitch Menu is a text-based user interface that lists available streams of followed channels, and launch vlc to watch them.
+
 Configuration
 -------------
 
@@ -15,4 +17,8 @@ To grab an access token, follow istructions [here](https://github.com/justintv/T
 Running the program
 -------------------
 
-`./twitchmenu`
+`./twitchmenu`  
+type 'q' or 'Q' to quit.  
+type 'r' or 'R' to force a refresh. (menu refresh every 30 seconds)  
+Move on the menu with arrow keys.  
+Type *Enter* to launch vlc.
