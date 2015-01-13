@@ -16,7 +16,7 @@ access_token = ""
 
 SOFTWARE_NAME = "Twitch Menu"
 VERSION = "0.1"
-ACCESS_TOKEN_PATH = "~/twitchmenu/access_token"
+ACCESS_TOKEN_PATH = "access_token"
 
 ########################################################################
 
