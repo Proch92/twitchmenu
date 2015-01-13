@@ -3,6 +3,16 @@ Twitch Menu
 
 Twitch Menu is a text-based user interface that lists available streams of followed channels, and launch vlc to watch them.
 
+Required Software
+-----------------
+
+Twitch Menu requires:
+  * [urwid](http://urwid.org/)
+  * [livestreamer](https://livestreamer.readthedocs.org/en/latest/)
+
+Fast setup:
+`pip install livestreamer urwid`
+
 Configuration
 -------------
 
