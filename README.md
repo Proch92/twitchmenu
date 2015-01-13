@@ -29,6 +29,6 @@ Running the program
 
 `./twitchmenu`  
 type 'q' or 'Q' to quit.  
-type 'r' or 'R' to force a refresh. (menu refresh every 30 seconds)  
-Move on the menu with arrow keys.  
+type 'r' or 'R' to force a refresh. (default refresh every 30 seconds)  
+Navigate menu with arrow keys.  
 Type *Enter* to launch vlc.
